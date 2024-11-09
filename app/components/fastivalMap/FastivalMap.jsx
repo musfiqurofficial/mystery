@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { IoCloseOutline } from "react-icons/io5";
 
-// Inline styles (converted from your HTML/CSS)
 const styles = {
   mapContainer: {
     width: "100vw",
