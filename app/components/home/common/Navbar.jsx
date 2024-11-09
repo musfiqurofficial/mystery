@@ -37,7 +37,7 @@ export const Nav = () => {
     { name: "Inventory", href: "/inventory" },
     { name: "Characters", href: "/characters" },
     { name: "Clues", href: "/clues" },
-    { name: "Back to Map", href: "/map" },
+    { name: "Back to Map", href: "/festival-map" },
   ];
 
   return (

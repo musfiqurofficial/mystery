@@ -1,14 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import { IoCloseOutline } from "react-icons/io5";
+
+import mapImg from "../../asset/35573.jpg";
 
 const styles = {
   mapContainer: {
-    width: "100vw",
-    height: "100vh",
-    background: "url('/images/Dickens_Map_2022.jpg') no-repeat center center",
-    backgroundSize: "cover",
     position: "relative",
   },
   poi: {
@@ -71,21 +70,29 @@ export default function FestivalMap() {
   return (
     <div>
       {/* Main Container */}
-      <div className="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">
+      <div className="px-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 pt-10">
         <h2 className="max-w-lg mb-4 font-sans text-3xl font-bold leading-none tracking-tight text-gray-900 sm:text-4xl md:mx-auto text-center">
           Festival Map
         </h2>
 
+        <center className="my-4">
+          <Image
+            src={mapImg}
+            alt=""
+            width={800}
+            height={800}
+            className="w-auto"
+          />
+        </center>
         {isMapVisible && (
-          <div style={styles.mapContainer}>
-            {/* Points of Interest (POI) */}
-            <div
-              style={{ ...styles.poi, top: "20%", left: "30%" }}
+          <center>
+            <button
               onClick={handleButtonClick}
+              className="bg-blue-500 hover:bg-blue-600 text-white font-medium text-[18px] rounded-md py-2 px-4"
             >
               Editor (Henley Green)
-            </div>
-          </div>
+            </button>
+          </center>
         )}
 
         {!isMapVisible && locationInfo && (
