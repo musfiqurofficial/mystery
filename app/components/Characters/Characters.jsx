@@ -53,13 +53,11 @@ const Characters = () => {
     <div>
       <div className="relative px-5 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 2xl:px-8 h-[80vh]">
         <div className="absolute top-1/2 transform -translate-y-1/2 w-full mx-auto">
-          <div className="flex justify-around items-center">
-            <div>
-              <h2 className="text-[62px] font-bold uppercase mr-14 font-mono">
-                Characters
-              </h2>
-            </div>
-            <TbArrowWaveRightUp className="w-[100px] h-[100px] text-blue-500 -mr-20" />
+          <div className="flex flex-col md:flex-row justify-around items-center">
+            <h2 className="text-[42px] lg:text-[62px] font-bold uppercase font-mono md:mb-0 mb-6 md:-mr-20 -mr-0">
+              Characters
+            </h2>
+            {/* <TbArrowWaveRightUp className="w-[100px] h-[100px] text-blue-500 -mr-20" /> */}
             <Swiper
               effect={"cards"}
               grabCursor={true}

@@ -61,18 +61,35 @@ const Clues = () => {
     setIsModalOpen(false);
     setSelectedClue(null);
   };
+
+  const lightColors = [
+    "bg-pink-100",
+    "bg-blue-100",
+    "bg-green-100",
+    "bg-yellow-100",
+    "bg-purple-100",
+    "bg-indigo-100",
+    "bg-teal-100",
+    "bg-orange-100",
+  ];
+
   return (
     <div className="px-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 pt-10">
-      <div className="grid grid-cols-3 gap-4 p-4">
-        {clues.map((_, index) => (
-          <div
-            key={index}
-            onClick={() => openClueModal(index)}
-            className="flex justify-center items-center bg-yellow-300 rounded-lg p-8 cursor-pointer"
-          >
-            <span className="text-4xl">?</span>
-          </div>
-        ))}
+      <h2 className="text-[32px] font-bold uppercase text-center mb-6">Clues</h2>
+      <div className="flex justify-center items-center">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          {clues.map((_, index) => (
+            <div
+              key={index}
+              onClick={() => openClueModal(index)}
+              className={`flex justify-center items-center ${
+                lightColors[index % lightColors.length]
+              } rounded-lg w-[200px] h-[200px] cursor-pointer hover:scale-75 translate-x-4 skew-y-3 ease-in-out delay-150 md:transform-none`}
+            >
+              <span className="text-4xl">?</span>
+            </div>
+          ))}
+        </div>
       </div>
 
       <ClueModal

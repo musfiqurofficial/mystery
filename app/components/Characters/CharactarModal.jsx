@@ -59,74 +59,34 @@ const CharacterModal = ({ isOpen, closeModal, character }) => {
                 {character.designation}
               </p>
               <div className="grid grid-cols-2 gap-6 mt-4">
-                <div
-                  className="bg-[#EDEADE] p-6 rounded-xl shadow cursor-pointer hover:shadow-xl"
-                  onClick={() => openPasswordModal("History")}
-                >
-                  <center>
-                    <Image
-                      src={history}
-                      alt="History"
-                      width={150}
-                      height={150}
-                      className="w-auto h-[80px]"
-                    />
-                  </center>
-                  <p className="text-center text-[24px] mt-3 font-semibold">
-                    History
-                  </p>
-                </div>
-                <div
-                  className="bg-[#EDEADE] p-6 rounded-xl shadow cursor-pointer hover:shadow-xl"
-                  onClick={() => openPasswordModal("Alibi")}
-                >
-                  <center>
-                    <Image
-                      src={alibi}
-                      alt="Alibi"
-                      width={150}
-                      height={150}
-                      className="w-auto h-[80px]"
-                    />
-                  </center>
-                  <p className="text-center text-[24px] mt-3 font-semibold">
-                    Alibi
-                  </p>
-                </div>
-                <div
-                  className="bg-[#EDEADE] p-6 rounded-xl shadow cursor-pointer hover:shadow-xl"
-                  onClick={() => openPasswordModal("Friend")}
-                >
-                  <center>
-                    <Image
-                      src={friend}
-                      alt="Friend"
-                      width={150}
-                      height={150}
-                      className="w-auto h-[80px]"
-                    />
-                  </center>
-                  <p className="text-center text-[24px] mt-3 font-semibold">
-                    Friend
-                  </p>
-                </div>
-                <div
-                  className="bg-[#EDEADE] p-6 rounded-xl shadow cursor-pointer hover:shadow-xl"
-                  onClick={() => openPasswordModal("Enemies")}
-                >
-                  <center>
-                    <Image
-                      src={enemies}
-                      alt="Enemies"
-                      width={150}
-                      height={150}
-                      className="w-auto h-[80px]"
-                    />
-                  </center>
-                  <p className="text-center text-[24px] mt-3 font-semibold">
-                    Enemies
-                  </p>
-                </div>
+                {["History", "Alibi", "Friend", "Enemies"].map((option, index) => (
+                  <div
+                    key={option}
+                    className="bg-[#EDEADE] p-6 rounded-xl shadow cursor-pointer hover:shadow-xl"
+                    onClick={() => openPasswordModal(option)}
+                  >
+                    <center>
+                      <Image
+                        src={
+                          option === "History"
+                            ? history
+                            : option === "Alibi"
+                            ? alibi
+                            : option === "Friend"
+                            ? friend
+                            : enemies
+                        }
+                        alt={option}
+                        width={150}
+                        height={150}
+                        className="w-auto h-[80px]"
+                      />
+                    </center>
+                    <p className="text-center text-[24px] mt-3 font-semibold">
+                      {option}
+                    </p>
+                  </div>
+                ))}
               </div>
             </div>
           )}
@@ -171,7 +131,11 @@ const CharacterModal = ({ isOpen, closeModal, character }) => {
                 <p className="text-gray-600">
                   {selectedOption === "History"
                     ? "Detailed history information here..."
-                    : "Detailed alibi information here..."}
+                    : selectedOption === "Alibi"
+                    ? "Detailed alibi information here..."
+                    : selectedOption === "Friend"
+                    ? "Information about friends..."
+                    : "Details about enemies..."}
                 </p>
                 <button
                   onClick={closePasswordModal}
