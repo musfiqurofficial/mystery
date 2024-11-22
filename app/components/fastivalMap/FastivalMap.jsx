@@ -7,26 +7,6 @@ import { IoCloseOutline } from "react-icons/io5";
 import mapImg from "../../asset/35573.jpg";
 
 const styles = {
-  mapContainer: {
-    position: "relative",
-  },
-  poi: {
-    position: "absolute",
-    backgroundColor: "#b18d3b",
-    color: "white",
-    padding: "5px",
-    borderRadius: "5px",
-    cursor: "pointer",
-  },
-  locationCard: {
-    padding: "20px",
-    backgroundColor: "#fff",
-    border: "1px solid #ccc",
-    borderRadius: "10px",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-    marginTop: "20px",
-    display: "none",
-  },
   locationCardVisible: {
     display: "block",
   },
@@ -37,20 +17,48 @@ export default function FestivalMap() {
   const [password, setPassword] = useState("");
   const [locationInfo, setLocationInfo] = useState(null);
   const [isMapVisible, setIsMapVisible] = useState(true);
+  const [selectedLocation, setSelectedLocation] = useState("");
 
-  const handleButtonClick = () => {
+  // Location Data
+  const locations = {
+    Henley: {
+      name: "Henley Green - Editor's Office",
+      description:
+        "Henley Green is the editor's office, filled with old books and mystery novels. A perfect place to uncover clues!",
+      password: "Henley",
+    },
+    Poe: {
+      name: "Edgar Allan Poe Alley",
+      description:
+        "A dimly lit alley named after the famous writer, it hides secrets in its shadows.",
+      password: "Poe",
+    },
+    Fezziwig: {
+      name: "Fezziwig Pub",
+      description:
+        "A bustling pub with hearty laughter, live music, and the smell of roasted meat.",
+      password: "Fezziwig",
+    },
+    Special: {
+      name: "Center Square",
+      description:
+        "The heart of the festival, filled with performers, food stalls, and curious onlookers.",
+      password: "Special",
+    },
+  };
+
+  // Handle button click to show the password prompt
+  const handleButtonClick = (locationKey) => {
+    setSelectedLocation(locationKey);
     setShowPasswordPrompt(true);
   };
 
+  // Handle password submission
   const handleSubmitPassword = (event) => {
     event.preventDefault();
-    if (password === "qwerty") {
+    if (password === locations[selectedLocation].password) {
       setShowPasswordPrompt(false);
-      setLocationInfo({
-        name: "Henley Green - Editor's Office",
-        description:
-          "Henley Green is the editor's office, filled with old books and mystery novels. A perfect place to uncover clues!",
-      });
+      setLocationInfo(locations[selectedLocation]);
       setIsMapVisible(false);
     } else {
       alert("Incorrect password");
@@ -60,6 +68,7 @@ export default function FestivalMap() {
 
   const handleCloseModal = () => {
     setShowPasswordPrompt(false);
+    setPassword("");
   };
 
   const handleBackToMap = () => {
@@ -78,29 +87,35 @@ export default function FestivalMap() {
         <center className="my-4">
           <Image
             src={mapImg}
-            alt=""
+            alt="Festival Map"
             width={800}
             height={800}
             className="w-auto"
           />
         </center>
+
+        {/* Buttons */}
         {isMapVisible && (
-          <center>
-            <button
-              onClick={handleButtonClick}
-              className="bg-blue-500 hover:bg-blue-600 text-white font-medium text-[18px] rounded-md py-2 px-4"
-            >
-              Editor (Henley Green)
-            </button>
-          </center>
+          <div className="flex flex-wrap justify-center gap-4">
+            {Object.keys(locations).map((key) => (
+              <button
+                key={key}
+                onClick={() => handleButtonClick(key)}
+                className="bg-blue-500 hover:bg-blue-600 text-white font-medium text-[18px] rounded-md py-2 px-4"
+              >
+                {locations[key].name.split(" - ")[0]}
+              </button>
+            ))}
+          </div>
         )}
 
+        {/* Location Information */}
         {!isMapVisible && locationInfo && (
-          <div style={styles.locationCardVisible}>
-            <h2>{locationInfo.name}</h2>
-            <p>{locationInfo.description}</p>
+          <div style={styles.locationCardVisible} className="text-center">
+            <h2 className="text-xl font-bold">{locationInfo.name}</h2>
+            <p className="text-gray-700">{locationInfo.description}</p>
             <button
-              className="bg-blue-500 text-white px-4 py-2 rounded"
+              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
               onClick={handleBackToMap}
             >
               Back to Map
@@ -120,11 +135,11 @@ export default function FestivalMap() {
               <IoCloseOutline className="w-5 h-5" />
             </button>
 
-            <h3 className="text-lg font-semibold mb-4">Enter Password</h3>
+            <h3 className="text-lg font-semibold mb-4">Password Protected</h3>
             <form onSubmit={handleSubmitPassword}>
               <input
                 type="password"
-                placeholder="Enter password"
+                placeholder="Type Password ..."
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full mb-4 p-2 border rounded"

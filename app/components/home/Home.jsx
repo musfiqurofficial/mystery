@@ -4,6 +4,9 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import DrawerMenu from "../DrawerMenu";
 
+import imgs from "../../asset/images/tree-lawns.jpg"
+import Image from "next/image";
+
 export default function Home() {
   const [password, setPassword] = useState("");
   const router = useRouter(); 
@@ -41,7 +44,7 @@ export default function Home() {
               onSubmit={handleSubmit}
             >
               <input
-                placeholder="Enter password"
+                placeholder="Type password ..."
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -57,6 +60,7 @@ export default function Home() {
           </div>
         </div>
       </div>
+   
     </div>
   );
 }
