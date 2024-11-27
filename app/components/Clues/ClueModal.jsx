@@ -5,6 +5,10 @@ import { QRCodeSVG } from "qrcode.react";
 export default function ClueModal({ isOpen, onClose, clue }) {
   if (!isOpen) return null;
 
+  function handleClose() {
+    onClose();
+  }
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
       <div className="bg-white p-6 rounded-lg max-w-md w-full">
@@ -19,13 +23,12 @@ export default function ClueModal({ isOpen, onClose, clue }) {
           height={500}
           className="mt-4"
         />
-        <p className="mt-2 text-gray-700">{clue.details}</p>
-
         {/* QR Code Display */}
         <div className="mt-4">
-          <QRCodeSVG value={clue.details} size={128} />
+          <QRCodeSVG value={clue.img} size={128} />
         </div>
       </div>
+      
     </div>
   );
 }
