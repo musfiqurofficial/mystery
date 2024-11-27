@@ -64,7 +64,7 @@ const Clues = () => {
 
             {!isPasswordCorrect ? (
               <div className="text-center">
-                <h3 className="text-lg font-semibold mb-4">Scan QR Code</h3>
+                <h3 className="text-lg font-semibold mb-4">Scan Word Puzzle</h3>
                 <center>
                   <QRCodeSVG
                     value={JSON.stringify({
