@@ -3,7 +3,6 @@
 import { clues } from "@/data/clues";
 import React, { useState } from "react";
 import { IoCloseOutline } from "react-icons/io5";
-import { QRCodeSVG } from "qrcode.react";
 import Image from "next/image";
 
 const Clues = () => {
@@ -11,24 +10,33 @@ const Clues = () => {
   const [password, setPassword] = useState("");
   const [isPasswordCorrect, setIsPasswordCorrect] = useState(false);
 
+  // Open modal for a clue
   const handleOpenModal = (index) => {
     setCurrentClueIndex(index);
     setPassword("");
     setIsPasswordCorrect(false);
   };
 
+  // Close modal
   const handleCloseModal = () => {
     setCurrentClueIndex(null);
     setPassword("");
     setIsPasswordCorrect(false);
   };
 
+  // Handle word click for password input
+  const handleWordClick = (word) => {
+    setPassword((prev) => (prev + word).slice(0, clues[currentClueIndex].password.length));
+  };
+
+  // Validate password
   const handleSubmitPassword = (e) => {
     e.preventDefault();
     if (clues[currentClueIndex]?.password === password) {
       setIsPasswordCorrect(true);
     } else {
       alert("Incorrect password, please try again!");
+      setPassword("");
     }
   };
 
@@ -44,8 +52,9 @@ const Clues = () => {
               key={index}
               onClick={() => handleOpenModal(index)}
               className={`flex justify-center items-center ${clue.color} rounded-lg w-[200px] h-[200px] cursor-pointer hover:scale-105 transition-transform`}
+              style={{ backgroundColor: clue.color }}
             >
-              <span className="text-4xl">?</span>
+              <span className="text-[100px] font-light font-sans">?</span>
             </div>
           ))}
         </div>
@@ -54,7 +63,7 @@ const Clues = () => {
       {/* Modal */}
       {currentClueIndex !== null && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded shadow-lg relative w-[300px]">
+          <div className={`bg-white p-6 rounded shadow-lg relative w-[300px]`}>
             <button
               className="absolute -top-2 -right-2 bg-red-500 text-white w-8 h-8 rounded-full flex justify-center items-center"
               onClick={handleCloseModal}
@@ -64,22 +73,29 @@ const Clues = () => {
 
             {!isPasswordCorrect ? (
               <div className="text-center">
-                <h3 className="text-lg font-semibold mb-4">Scan Word Puzzle</h3>
-                <center>
-                  <QRCodeSVG
-                    value={JSON.stringify({
-                      password: clues[currentClueIndex].password,
-                    })}
-                    size={200}
-                  />
-                </center>
+                <h3 className="text-lg font-semibold mb-4">Solve the Word Puzzle</h3>
+                <div className="flex flex-wrap justify-center gap-2 mb-4">
+                  {clues[currentClueIndex]?.password
+                    .split("")
+                    .concat(clues[currentClueIndex]?.password.split("").reverse())
+                    .sort(() => Math.random() - 0.5)
+                    .map((word, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => handleWordClick(word)}
+                        className="bg-gray-200 text-black px-3 py-1 rounded hover:bg-gray-400 text-[20px]"
+                      >
+                        {word}
+                      </button>
+                    ))}
+                </div>
                 <form onSubmit={handleSubmitPassword} className="mt-4">
                   <input
-                    type="password"
-                    placeholder="Type Password..."
+                    type="text"
+                    placeholder="Password"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full mb-4 p-2 border rounded"
+                    readOnly
+                    className="w-full mb-4 p-2 border rounded bg-gray-100 cursor-not-allowed"
                   />
                   <button
                     type="submit"
@@ -90,7 +106,7 @@ const Clues = () => {
                 </form>
               </div>
             ) : (
-              <div className="">
+              <div>
                 <h3 className="text-[32px] font-semibold mb-4 text-center font-mono">
                   {clues[currentClueIndex].name}
                 </h3>
@@ -101,7 +117,9 @@ const Clues = () => {
                   alt={clues[currentClueIndex].name}
                   className="mb-4 w-full h-auto rounded"
                 />
-                <p className="text-[18px] text-justify">{clues[currentClueIndex].item}</p>
+                <p className="text-[18px] text-justify">
+                  {clues[currentClueIndex].item}
+                </p>
               </div>
             )}
           </div>
