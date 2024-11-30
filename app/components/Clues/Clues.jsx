@@ -24,7 +24,7 @@ const Clues = () => {
     setIsPasswordCorrect(unlockedClues[index]);
 
     if (!unlockedClues[index]) {
-      const letters = clues[index].password.split("");
+      const letters = clues[index].password.toUpperCase().split("");
       const letterFrequency = {};
 
       letters.forEach((letter) => {
@@ -61,13 +61,16 @@ const Clues = () => {
 
   const handleWordClick = (word, idx) => {
     const newPassword = password + word;
-    setPassword(newPassword.slice(0, clues[currentClueIndex].password.length));
+    const normalizedPassword = newPassword.toUpperCase();
+    const correctPassword = clues[currentClueIndex].password.toUpperCase();
+
+    setPassword(
+      normalizedPassword.slice(0, clues[currentClueIndex].password.length)
+    );
 
     const updatedStatuses = [...letterStatuses];
-
     updatedStatuses[idx] =
-      newPassword ===
-      clues[currentClueIndex].password.slice(0, newPassword.length)
+      normalizedPassword === correctPassword.slice(0, normalizedPassword.length)
         ? "correct"
         : "incorrect";
 
@@ -76,7 +79,10 @@ const Clues = () => {
 
   const handleSubmitPassword = (e) => {
     e.preventDefault();
-    if (clues[currentClueIndex]?.password === password) {
+    const normalizedPassword = password.toUpperCase();
+    const correctPassword = clues[currentClueIndex].password.toUpperCase();
+
+    if (normalizedPassword === correctPassword) {
       setIsPasswordCorrect(true);
       setUnlockedClues((prev) => {
         const updated = [...prev];
@@ -107,7 +113,7 @@ const Clues = () => {
         Clues
       </h2>
       <div className="flex justify-center items-center">
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {clues.map((clue, index) => (
             <div
               key={index}
