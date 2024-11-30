@@ -10,19 +10,24 @@ const Clues = () => {
   const [password, setPassword] = useState("");
   const [isPasswordCorrect, setIsPasswordCorrect] = useState(false);
   const [scrambledLetters, setScrambledLetters] = useState([]);
+  const [unlockedClues, setUnlockedClues] = useState(() =>
+    Array(clues.length).fill(false)
+  );
 
   // Open modal for a clue
   const handleOpenModal = (index) => {
     setCurrentClueIndex(index);
     setPassword("");
-    setIsPasswordCorrect(false);
+    setIsPasswordCorrect(unlockedClues[index]); // Skip puzzle if already unlocked
 
     // Scramble letters only when the modal is opened
-    const letters = clues[index].password.split("");
-    const scrambled = letters
-      .concat(letters.slice().reverse()) // Duplicate and reverse for more options
-      .sort(() => Math.random() - 0.5); // Randomize order
-    setScrambledLetters(scrambled);
+    if (!unlockedClues[index]) {
+      const letters = clues[index].password.split("");
+      const scrambled = letters
+        .concat(letters.slice().reverse()) // Duplicate and reverse for more options
+        .sort(() => Math.random() - 0.5); // Randomize order
+      setScrambledLetters(scrambled);
+    }
   };
 
   // Close modal
@@ -43,6 +48,11 @@ const Clues = () => {
     e.preventDefault();
     if (clues[currentClueIndex]?.password === password) {
       setIsPasswordCorrect(true);
+      setUnlockedClues((prev) => {
+        const updated = [...prev];
+        updated[currentClueIndex] = true;
+        return updated;
+      });
     } else {
       alert("Incorrect password, please try again!");
       setPassword("");
@@ -60,10 +70,14 @@ const Clues = () => {
             <div
               key={index}
               onClick={() => handleOpenModal(index)}
-              className={`flex justify-center items-center rounded-lg w-[200px] h-[200px] cursor-pointer hover:scale-105 transition-transform`}
-              style={{ backgroundColor: clue.color }}
+              className={`flex justify-center items-center rounded-lg w-[200px] h-[200px] cursor-pointer hover:scale-105 transition-transform ${
+                unlockedClues[index] ? "bg-green-500" : clue.color
+              }`}
+              style={{ backgroundColor: unlockedClues[index] ? "#4CAF50" : clue.color }}
             >
-              <span className="text-[100px] font-light font-sans">?</span>
+              <span className="text-[100px] font-light font-sans">
+                {unlockedClues[index] ? "✓" : "?"}
+              </span>
             </div>
           ))}
         </div>
