@@ -119,14 +119,17 @@ const Clues = () => {
                     </button>
                   ))}
                 </div>
-                <form onSubmit={handleSubmitPassword} className="mt-4 ">
-                  <div className="relative h-[40px] mb-4">
+                <form
+                  onSubmit={handleSubmitPassword}
+                  className="flex justify-between items-center gap-4 mt-10"
+                >
+                  <div className="relative w-full h-[40px]">
                     <input
                       type="text"
                       placeholder="Password"
                       value={password}
                       readOnly
-                      className="w-full h-full mb-4 px-2 border rounded bg-gray-100 cursor-not-allowed"
+                      className="w-full h-full px-2 border rounded bg-gray-100 cursor-not-allowed"
                     />
                     <button
                       type="button"
@@ -138,7 +141,7 @@ const Clues = () => {
                   </div>
                   <button
                     type="submit"
-                    className="bg-blue-500 text-white px-4 py-2 rounded w-full"
+                    className="bg-blue-500 text-white px-1 h-[40px] rounded w-[30%]"
                   >
                     Unlock
                   </button>
@@ -146,9 +149,6 @@ const Clues = () => {
               </div>
             ) : (
               <div>
-                <h3 className="text-[32px] font-semibold mb-4 text-center font-mono">
-                  {clues[currentClueIndex].name}
-                </h3>
                 <div
                   className="flex justify-center mb-3 cursor-pointer"
                   onClick={() => setIsFullScreenImage(true)}
@@ -161,6 +161,9 @@ const Clues = () => {
                     className="mb-4 w-auto h-[45vh] rounded"
                   />
                 </div>
+                <h3 className="text-[32px] font-semibold mb-4 text-blue-500 font-mono">
+                  {clues[currentClueIndex].name}
+                </h3>
                 <p className="text-[18px] text-justify">
                   {clues[currentClueIndex].item}
                 </p>
