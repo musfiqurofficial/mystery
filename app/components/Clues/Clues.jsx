@@ -9,12 +9,20 @@ const Clues = () => {
   const [currentClueIndex, setCurrentClueIndex] = useState(null);
   const [password, setPassword] = useState("");
   const [isPasswordCorrect, setIsPasswordCorrect] = useState(false);
+  const [scrambledLetters, setScrambledLetters] = useState([]);
 
   // Open modal for a clue
   const handleOpenModal = (index) => {
     setCurrentClueIndex(index);
     setPassword("");
     setIsPasswordCorrect(false);
+
+    // Scramble letters only when the modal is opened
+    const letters = clues[index].password.split("");
+    const scrambled = letters
+      .concat(letters.slice().reverse()) // Duplicate and reverse for more options
+      .sort(() => Math.random() - 0.5); // Randomize order
+    setScrambledLetters(scrambled);
   };
 
   // Close modal
@@ -22,6 +30,7 @@ const Clues = () => {
     setCurrentClueIndex(null);
     setPassword("");
     setIsPasswordCorrect(false);
+    setScrambledLetters([]);
   };
 
   // Handle word click for password input
@@ -51,7 +60,7 @@ const Clues = () => {
             <div
               key={index}
               onClick={() => handleOpenModal(index)}
-              className={`flex justify-center items-center ${clue.color} rounded-lg w-[200px] h-[200px] cursor-pointer hover:scale-105 transition-transform`}
+              className={`flex justify-center items-center rounded-lg w-[200px] h-[200px] cursor-pointer hover:scale-105 transition-transform`}
               style={{ backgroundColor: clue.color }}
             >
               <span className="text-[100px] font-light font-sans">?</span>
@@ -75,19 +84,15 @@ const Clues = () => {
               <div className="text-center">
                 <h3 className="text-lg font-semibold mb-4">Solve the Word Puzzle</h3>
                 <div className="flex flex-wrap justify-center gap-2 mb-4">
-                  {clues[currentClueIndex]?.password
-                    .split("")
-                    .concat(clues[currentClueIndex]?.password.split("").reverse())
-                    .sort(() => Math.random() - 0.5)
-                    .map((word, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => handleWordClick(word)}
-                        className="bg-gray-200 text-black px-3 py-1 rounded hover:bg-gray-400 text-[20px]"
-                      >
-                        {word}
-                      </button>
-                    ))}
+                  {scrambledLetters.map((word, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => handleWordClick(word)}
+                      className="bg-gray-200 text-black px-3 py-1 rounded hover:bg-gray-400 text-[20px]"
+                    >
+                      {word}
+                    </button>
+                  ))}
                 </div>
                 <form onSubmit={handleSubmitPassword} className="mt-4">
                   <input
