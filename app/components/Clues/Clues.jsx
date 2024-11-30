@@ -11,6 +11,7 @@ const Clues = () => {
   const [password, setPassword] = useState("");
   const [isPasswordCorrect, setIsPasswordCorrect] = useState(false);
   const [scrambledLetters, setScrambledLetters] = useState([]);
+  const [letterStatuses, setLetterStatuses] = useState([]);
   const [unlockedClues, setUnlockedClues] = useState(() =>
     Array(clues.length).fill(false)
   );
@@ -24,10 +25,29 @@ const Clues = () => {
 
     if (!unlockedClues[index]) {
       const letters = clues[index].password.split("");
-      const scrambled = letters
-        .concat(letters.slice().reverse())
-        .sort(() => Math.random() - 0.5);
+      const letterFrequency = {};
+
+      letters.forEach((letter) => {
+        letterFrequency[letter] = (letterFrequency[letter] || 0) + 1;
+      });
+
+      let limitedLetters = [];
+      for (const [letter, count] of Object.entries(letterFrequency)) {
+        limitedLetters = limitedLetters.concat(Array(count).fill(letter));
+      }
+
+      const totalLetters = 15;
+      const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      while (limitedLetters.length < totalLetters) {
+        const randomLetter =
+          alphabet[Math.floor(Math.random() * alphabet.length)];
+        limitedLetters.push(randomLetter);
+      }
+
+      const scrambled = limitedLetters.sort(() => Math.random() - 0.5);
       setScrambledLetters(scrambled);
+
+      setLetterStatuses(new Array(scrambled.length).fill("unused"));
     }
   };
 
@@ -36,12 +56,22 @@ const Clues = () => {
     setPassword("");
     setIsPasswordCorrect(false);
     setScrambledLetters([]);
+    setLetterStatuses([]);
   };
 
-  const handleWordClick = (word) => {
-    setPassword((prev) =>
-      (prev + word).slice(0, clues[currentClueIndex].password.length)
-    );
+  const handleWordClick = (word, idx) => {
+    const newPassword = password + word;
+    setPassword(newPassword.slice(0, clues[currentClueIndex].password.length));
+
+    const updatedStatuses = [...letterStatuses];
+
+    updatedStatuses[idx] =
+      newPassword ===
+      clues[currentClueIndex].password.slice(0, newPassword.length)
+        ? "correct"
+        : "incorrect";
+
+    setLetterStatuses(updatedStatuses);
   };
 
   const handleSubmitPassword = (e) => {
@@ -60,6 +90,15 @@ const Clues = () => {
       alert("Incorrect password, please try again!");
       setPassword("");
     }
+  };
+
+  const getLetterColor = (letter, idx) => {
+    if (letterStatuses[idx] === "correct") {
+      return "text-white";
+    } else if (letterStatuses[idx] === "incorrect") {
+      return "text-black";
+    }
+    return "text-black";
   };
 
   return (
@@ -112,13 +151,23 @@ const Clues = () => {
                   {scrambledLetters.map((word, idx) => (
                     <button
                       key={idx}
-                      onClick={() => handleWordClick(word)}
-                      className="bg-gray-200 text-black px-3 py-1 rounded hover:bg-gray-400 text-[20px]"
+                      onClick={() => handleWordClick(word, idx)}
+                      className={`px-3 py-1 rounded text-[20px] ${getLetterColor(
+                        word,
+                        idx
+                      )} ${
+                        letterStatuses[idx] === "correct"
+                          ? "bg-green-500 text-white"
+                          : letterStatuses[idx] === "incorrect"
+                          ? "bg-red-500 text-white"
+                          : "bg-gray-200 text-black"
+                      }`}
                     >
                       {word}
                     </button>
                   ))}
                 </div>
+
                 <form
                   onSubmit={handleSubmitPassword}
                   className="flex justify-between items-center gap-4 mt-10"
